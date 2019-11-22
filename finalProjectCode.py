@@ -6,8 +6,7 @@ pygame.init()
 
                 #----------PICTURES FOR GAME---------------#
 
-#nippert stadium picture
-stadium = pygame.image.load(r'C:\Users\justi\Documents\Python Programming\pygame\nip.jpg')
+
 
                 #----------SOUND FOR GAME---------------#
 
@@ -27,7 +26,7 @@ framesPerSecond = 50
 
 #font
 
-
+#Function which allows for multiline text wrapping with pygame
 def blit_text(surface, text, pos, font, color=RED):
     words = [word.split(' ') for word in text.splitlines()]  # 2D array where each row is a list of words.
     space = font.size(' ')[0]  # The width of a space.
@@ -45,10 +44,22 @@ def blit_text(surface, text, pos, font, color=RED):
         x = pos[0]  # Reset the x.
         y += word_height  # Start on new row.
 
+#function to display game menu
+def gameMenu():
+    intro = True
+    while intro:
+        screen.fill(RED)
+        pygame.display.update()
+        clock.tick(framesPerSecond)
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+            if event.type == pygame.MOUSEBUTTONUP:
+                intro = False
 
 text = "It's December 5, 2009 and your beloved University of Cincinnati Bearcats are taking on the University of Pittsburgh Panthers.\n\nThe winner clinches the conference championship.\n\nThe Bearcats have a shot at playing inthe national championship with a win.\n\nHowever, the game starts out rough and the Bearcats are down 31-17 at haltime.\n\nAfter making some halftime adjustments, you come out strong in the second half and manage to tie the game up 38-38 at halftime.\n\nUnfortunately, Pittsburgh scores a touchdown late and manages to take the lead.\n\nBUT THEY MISS THE TWO POINT CONVERSION!\n...................................................................................................................................................\nThere's 1:30 left in the game and you have the ball on your own 39 yard line with 2 timeouts left.\n\nCan you drive down the field and score the game winning touchdown and give the Bearcats a chance to play in the national championship game?"
-font = pygame.font.SysFont('Times New Roman', 18)
-font.set_bold(True)
+instructionFont = pygame.font.SysFont('Times New Roman', 18)
+instructionFont.set_bold(True)
 
 class Player(pygame.sprite.Sprite):
     def __init__(self):
@@ -82,13 +93,15 @@ allSprites.add(playerObject)
 #variable to keep game running
 gameRunning = True
 
+gameMenu()
+
+
 #game loop
 while gameRunning:
     #keep the game running at the right speed
     clock.tick(framesPerSecond)
     screen.fill(BLACK)
-    blit_text(screen, text, (20,100), font)
-    #screen.blit(stadium, [0,0])
+    blit_text(screen, text, (20,100), instructionFont)
     for event in pygame.event.get():
         #check for close window
         if event.type == pygame.QUIT:
