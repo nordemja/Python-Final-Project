@@ -44,18 +44,48 @@ def blit_text(surface, text, pos, font, color=RED):
         x = pos[0]  # Reset the x.
         y += word_height  # Start on new row.
 
+def buttons(msg, btnX, btnY, buttonWidth, buttonHeight, inactiveColor, activeColor, activeTextColor):
+        mouse = pygame.mouse.get_pos()
+
+        buttonFont = pygame.font.SysFont('Limonata', 35)
+        buttonFont.set_bold(True)
+        buttonText = buttonFont.render(msg, True, WHITE)
+        buttonTextRect = buttonText.get_rect()
+        buttonTextRect.center = ((btnX+(buttonWidth/2)),(btnY+(buttonHeight/2)))
+        screen.blit(buttonText,buttonTextRect)
+
+        if btnX+buttonWidth > mouse [0] > btnX and btnY+buttonHeight > mouse[1] > btnY:
+              pygame.draw.rect(screen, activeColor, (btnX,btnY,buttonWidth,buttonHeight))
+              buttonText = buttonFont.render(msg, True, activeTextColor)
+              screen.blit(buttonText,buttonTextRect)
+        else:
+            pygame.draw.rect(screen, inactiveColor, (btnX,btnY,buttonWidth,buttonHeight))
+            screen.blit(buttonText,buttonTextRect)
+        
+
 #function to display game menu
 def gameMenu():
     intro = True
+
+    font = pygame.font.SysFont('Limonata', 50)
+    font.set_bold(True)
+    font.set_italic(True)
+    menuText = font.render("BEARCATS",True, RED)
+    menuText.get_rect()
+    menuTextRect = menuText.get_rect()
+    menuTextRect.center = (WIDTH/2,HEIGHT/8)
+
     while intro:
-        screen.fill(RED)
+        screen.fill(BLACK)
+        buttons("ONWARDS TO VICTORY!", 415,470,350,50, RED, WHITE, RED)
+        
+            
+        screen.blit(menuText,menuTextRect)
         pygame.display.update()
         clock.tick(framesPerSecond)
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
-            if event.type == pygame.MOUSEBUTTONUP:
-                intro = False
 
 text = "It's December 5, 2009 and your beloved University of Cincinnati Bearcats are taking on the University of Pittsburgh Panthers.\n\nThe winner clinches the conference championship.\n\nThe Bearcats have a shot at playing inthe national championship with a win.\n\nHowever, the game starts out rough and the Bearcats are down 31-17 at haltime.\n\nAfter making some halftime adjustments, you come out strong in the second half and manage to tie the game up 38-38 at halftime.\n\nUnfortunately, Pittsburgh scores a touchdown late and manages to take the lead.\n\nBUT THEY MISS THE TWO POINT CONVERSION!\n...................................................................................................................................................\nThere's 1:30 left in the game and you have the ball on your own 39 yard line with 2 timeouts left.\n\nCan you drive down the field and score the game winning touchdown and give the Bearcats a chance to play in the national championship game?"
 instructionFont = pygame.font.SysFont('Times New Roman', 18)
