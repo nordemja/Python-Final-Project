@@ -44,8 +44,9 @@ def blit_text(surface, text, pos, font, color=RED):
         x = pos[0]  # Reset the x.
         y += word_height  # Start on new row.
 
-def buttons(msg, btnX, btnY, buttonWidth, buttonHeight, inactiveColor, activeColor, activeTextColor):
+def buttons(msg, btnX, btnY, buttonWidth, buttonHeight, inactiveColor, activeColor, activeTextColor,action=None):
         mouse = pygame.mouse.get_pos()
+        mouseClick = pygame.mouse.get_pressed()
 
         buttonFont = pygame.font.SysFont('Limonata', 35)
         buttonFont.set_bold(True)
@@ -58,6 +59,9 @@ def buttons(msg, btnX, btnY, buttonWidth, buttonHeight, inactiveColor, activeCol
               pygame.draw.rect(screen, activeColor, (btnX,btnY,buttonWidth,buttonHeight))
               buttonText = buttonFont.render(msg, True, activeTextColor)
               screen.blit(buttonText,buttonTextRect)
+              if mouseClick[0] == 1 and action != None:
+                  if action == "play":
+                      gameLoop()
         else:
             pygame.draw.rect(screen, inactiveColor, (btnX,btnY,buttonWidth,buttonHeight))
             screen.blit(buttonText,buttonTextRect)
@@ -77,12 +81,12 @@ def gameMenu():
 
     while intro:
         screen.fill(BLACK)
-        buttons("ONWARDS TO VICTORY!", 415,470,350,50, RED, WHITE, RED)
-        
-            
+        buttons("ONWARDS TO VICTORY!", 415,470,350,50, RED, WHITE, RED, "play")
+           
         screen.blit(menuText,menuTextRect)
         pygame.display.update()
         clock.tick(framesPerSecond)
+        
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
@@ -121,25 +125,25 @@ playerObject = Player()
 allSprites.add(playerObject)
 
 #variable to keep game running
-gameRunning = True
+
+def gameLoop():
+#game loop
+    gameRunning = True
+    while gameRunning:
+        #keep the game running at the right speed
+        clock.tick(framesPerSecond)
+        screen.fill(BLACK)
+        blit_text(screen, text, (20,100), instructionFont)
+        for event in pygame.event.get():
+            #check for close window
+            if event.type == pygame.QUIT:
+                gameRunning = False
+        
+        #allSprites.update()
+        #allSprites.draw(screen)
+        pygame.display.flip()
+
+    #close the game
+    pygame.quit()
 
 gameMenu()
-
-
-#game loop
-while gameRunning:
-    #keep the game running at the right speed
-    clock.tick(framesPerSecond)
-    screen.fill(BLACK)
-    blit_text(screen, text, (20,100), instructionFont)
-    for event in pygame.event.get():
-        #check for close window
-        if event.type == pygame.QUIT:
-            gameRunning = False
-    
-    #allSprites.update()
-    #allSprites.draw(screen)
-    pygame.display.flip()
-
-#close the game
-pygame.quit()
