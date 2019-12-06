@@ -1,7 +1,6 @@
 #Pygame template -- template for final project
 import pygame
 import random
-import time
 
 pygame.init()
 
@@ -16,13 +15,10 @@ bearcatLogo = pygame.image.load(r"C:\\Users\\justi\Documents\\Python Programming
 WHITE = (255,255,255)
 BLACK = (0,0,0)
 RED = (224,1,34)
-GREEN = (0,255,0)
-BLUE = (0,0,255)
 
 #set size of pygame screen
 WIDTH = 1150
 HEIGHT = 700
-
 
 framesPerSecond = 50
 
@@ -31,8 +27,9 @@ ToGo = 10
 BallOn = 37
 TimeLeft = 90
 midfield = 50
+SideOfField = "CIN"
+timeoutsLeft = 2
 yardsGained = 0
-
 
 #Function which allows for multiline text wrapping with pygame
 def blit_text(surface, text, pos, font, color=RED):
@@ -51,7 +48,6 @@ def blit_text(surface, text, pos, font, color=RED):
             x += word_width + space
         x = pos[0]  # Reset the x.
         y += word_height  # Start on new row.
-
 
 #function to display text
 def displayText(message, font, color, fontSize, locationX, locationY):
@@ -97,6 +93,7 @@ def runOption():
     global BallOn
     global TimeLeft
     global yardsGained
+    global SideOfField
 
     x = True
     outcome1 = "Not sure why you're running right now but you gained 4 yards."
@@ -110,32 +107,36 @@ def runOption():
     if result == outcome1:
         DownNum += 1
         ToGo -= 4
-        BallOn += 4
         yardsGained += 4
-
+        BallOn += 4
 
         if (DownNum > 4 and ToGo <= 0) or ToGo <= 0:
             DownNum = 1
             ToGo = 10
         elif DownNum > 4 and ToGo > 0:
            TurnoverScreen()
+
     if result == outcome2:
         DownNum += 1
         ToGo -= 10
-        BallOn += 10
         yardsGained += 10
+        BallOn += 10
+
         if (DownNum > 4 and ToGo <= 0) or ToGo <= 0:
             DownNum = 1
             ToGo = 10
         elif DownNum > 4 and ToGo > 0:
             TurnoverScreen()
+
     if result == outcome3:
         DownNum += 1
         ToGo += 3
-        BallOn -= 3
         yardsGained -= 3
+        BallOn -= 3
+
         if DownNum > 4:
            TurnoverScreen()
+
     if result == outcome4:
         DownNum += 1
         if DownNum > 4:
@@ -146,19 +147,19 @@ def runOption():
         if result == outcome1:
             screen.fill(RED)
             displayText(outcome1,'Limonata', BLACK, 35,WIDTH, HEIGHT)
-            buttons("NEXT PLAY", 415,470,350,50, BLACK,WHITE,BLACK, screen1)
+            buttons("NEXT PLAY", 415,470,350,50, BLACK,WHITE,BLACK, playcallScreen)
         if result == outcome2:
             screen.fill(RED)
             displayText(outcome2,'Limonata', BLACK, 35, WIDTH, HEIGHT)
-            buttons("NEXT PLAY", 415,470,350,50, BLACK,WHITE,BLACK, screen1)
+            buttons("NEXT PLAY", 415,470,350,50, BLACK,WHITE,BLACK, playcallScreen)
         if result == outcome3:
             screen.fill(RED)
             displayText(outcome3,'Limonata', BLACK, 35, WIDTH, HEIGHT)
-            buttons("NEXT PLAY", 415,470,350,50, BLACK,WHITE,BLACK, screen1)
+            buttons("NEXT PLAY", 415,470,350,50, BLACK,WHITE,BLACK, playcallScreen)
         if result == outcome4:
             screen.fill(RED)
             displayText(outcome4,'Limonata', BLACK, 35, WIDTH, HEIGHT)
-            buttons("NEXT PLAY", 415,470,350,50, BLACK,WHITE,BLACK, screen1)
+            buttons("NEXT PLAY", 415,470,350,50, BLACK,WHITE,BLACK, playcallScreen)
         pygame.display.update()
         clock.tick(framesPerSecond)
 
@@ -174,6 +175,8 @@ def passOption():
     global DownNum
     global BallOn
     global TimeLeft
+    global yardsGained
+    global SideOfField
 
     x = True
     outcome1 = "You threw a deep pass and it fell incomplete. No gain."
@@ -184,32 +187,81 @@ def passOption():
     result = Results(possibleOutcomes)
 
     if result == outcome1:
-        ToGo -= 4
+        DownNum += 1
+        if DownNum > 4:
+            TurnoverScreen()
+
     if result == outcome2:
-        ToGo -= 4
+        DownNum += 1
+        ToGo -= 5
+        yardsGained += 5
+
+        if BallOn+5 > 50 and SideOfField == "CIN":
+            yardsRemaining = (BallOn+5) - 50
+            BallOn = 100 - 50 - yardsRemaining
+            SideOfField = "PIT"
+        elif yardsGained > 13:
+            BallOn -= 5
+        else:
+            BallOn += 5
+
+        if (DownNum > 4 and ToGo <= 0) or ToGo <= 0:
+            DownNum = 1
+            ToGo = 10
+        elif DownNum > 4 and ToGo > 0:
+           TurnoverScreen()
+
     if result == outcome3:
-        ToGo -= 4
+        DownNum += 1
+        ToGo += 5
+        yardsGained -= 5
+
+        if SideOfField == "PIT":
+            BallOn += 5
+        elif SideOfField == "CIN":
+            BallOn -= 5 
+
+        if DownNum > 4:
+           TurnoverScreen()
+
     if result == outcome4:
-        ToGo -= 4
+        DownNum += 1
+        ToGo -= 20
+        yardsGained += 20
+
+        if BallOn+20 > 50 and SideOfField == "CIN":
+            yardsRemaining = (BallOn+20) - 50
+            BallOn = 100 - 50 - yardsRemaining
+            SideOfField = "PIT"
+        elif yardsGained > 13:
+            BallOn -= 20
+        else:
+            BallOn += 20
+
+        if (DownNum > 4 and ToGo <= 0) or ToGo <= 0:
+            DownNum = 1
+            ToGo = 10
+        elif DownNum > 4 and ToGo > 0:
+           TurnoverScreen()
 
     while x:
         screen.fill(BLACK)
         if result == outcome1:
             screen.fill(RED)
             displayText(outcome1,'Limonata', BLACK, 35, WIDTH, HEIGHT)
-            buttons("NEXT PLAY", 415,470,350,50, BLACK,WHITE,BLACK, screen1)
+            buttons("NEXT PLAY", 415,470,350,50, BLACK,WHITE,BLACK, playcallScreen)
         if result == outcome2:
             screen.fill(RED)
             displayText(outcome2,'Limonata', BLACK, 35, WIDTH, HEIGHT)
-            buttons("NEXT PLAY", 415,470,350,50, BLACK,WHITE,BLACK, screen1)
+            buttons("NEXT PLAY", 415,470,350,50, BLACK,WHITE,BLACK, playcallScreen)
         if result == outcome3:
             screen.fill(RED)
             displayText(outcome3,'Limonata', BLACK, 35, WIDTH, HEIGHT)
-            buttons("NEXT PLAY", 415,470,350,50, BLACK,WHITE,BLACK, screen1)
+            buttons("NEXT PLAY", 415,470,350,50, BLACK,WHITE,BLACK, playcallScreen)
         if result == outcome4:
             screen.fill(RED)
             displayText(outcome4,'Limonata', BLACK, 35, WIDTH, HEIGHT)
-            buttons("NEXT PLAY", 415,470,350,50, BLACK,WHITE,BLACK, screen1)
+            buttons("NEXT PLAY", 415,470,350,50, BLACK,WHITE,BLACK, playcallScreen)
         pygame.display.update()
         clock.tick(framesPerSecond)
         
@@ -218,22 +270,59 @@ def passOption():
                 pygame.quit()
                 quit
 
-def screen1():
+def getSuffix(currentDown):
+    if currentDown == 1:
+        return "st"
+    elif currentDown == 2:
+        return "nd"
+    elif currentDown == 3:
+        return "rd"
+    else: 
+        return "th"
+
+def playcallScreen():
     x = True
     if yardsGained < 13:
-        message = "Down: " + str(DownNum) + "st and " + str(ToGo) + "               " + "Ball on: CIN " + str(BallOn) + "               " + "Time left: " + str(TimeLeft) + " seconds"
+        message = "Down: " + str(DownNum) + getSuffix(DownNum) + " and " + str(ToGo) + "               " + "Ball on: " + str(SideOfField) + " " + str(BallOn) + "               " + "Time left: " + str(TimeLeft) + " seconds"
     elif yardsGained == 13:
-        message = "Down: " + str(DownNum) + "st and " + str(ToGo) + "               " + "Ball on: " + str(BallOn) + "               " + "Time left: " + str(TimeLeft) + " seconds"
+        message = "Down: " + str(DownNum) + getSuffix(DownNum) + " and " + str(ToGo) + "               " + "Ball on: " + str(SideOfField) + "               " + "Time left: " + str(TimeLeft) + " seconds"
     else:
-        message = "Down: " + str(DownNum) + "st and " + str(ToGo) + "               " + "Ball on: PIT " + str(BallOn) + "               " + "Time left: " + str(TimeLeft) + " seconds"
+        message = "Down: " + str(DownNum) + getSuffix(DownNum) + " and " + str(ToGo) + "               " + "Ball on: " + str(SideOfField) + " " +  str(BallOn) + "           " + "Time left: " + str(TimeLeft) + " seconds"
     while x:
-        screen.fill(RED)
-        displayText(message,'Limonata',BLACK,35,1155,225)
-        buttons("PASS", 150,250,150,150,BLACK,WHITE,BLACK, passOption)
-        buttons("RUN", 850,250,150,150,BLACK,WHITE,BLACK, runOption)
+        if timeoutsLeft > 0:
+            screen.fill(RED)
+            displayText(message,'Limonata',BLACK,35,1155,225)
+            buttons("PASS", 250,175,150,75,BLACK,WHITE,BLACK, passOption)
+            buttons("RUN", 450,175,150,75,BLACK,WHITE,BLACK, runOption)
+            buttons("TIMEOUT", 650,175,150,75,BLACK,WHITE,BLACK, timeoutScreen)
+            pygame.display.update()
+            clock.tick(framesPerSecond)
+        else:
+            screen.fill(RED)
+            displayText(message,'Limonata',BLACK,35,1155,225)
+            buttons("PASS", 400,175,150,75,BLACK,WHITE,BLACK, passOption)
+            buttons("RUN", 600,175,150,75,BLACK,WHITE,BLACK, runOption)
+            pygame.display.update()
+            clock.tick(framesPerSecond)
+
+
+
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                quit
+
+def timeoutScreen():
+    global timeoutsLeft
+    x = True
+    timeoutsLeft -= 1
+    message = "You called a timeout! You have " + str(timeoutsLeft) + " timeout left."
+    while x:
+        screen.fill(BLACK)
+        displayText(message, "Limonata", RED, 35, WIDTH, HEIGHT)
+        buttons("GOT IT! NEXT PLAY", 415,470,350,50, RED,WHITE,RED, playcallScreen)
         pygame.display.update()
         clock.tick(framesPerSecond)
-
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -247,8 +336,8 @@ def TurnoverScreen():
     while x:
         screen.fill(RED)
         displayText(message,'Limonata',BLACK,35,1155,225)
-        buttons("PLAY AGAIN", 150,250,250,150,BLACK,WHITE,BLACK, gameMenu)
-        buttons("QUIT", 550,150,150,150,BLACK,WHITE,BLACK, quit)
+        buttons("PLAY AGAIN", 275, 500, 250, 75, BLACK, WHITE, BLACK, gameMenu)
+        buttons("QUIT", 675, 500, 150, 75, BLACK, WHITE, BLACK, quit)
         pygame.display.update()
         clock.tick(framesPerSecond)
 
@@ -257,10 +346,10 @@ def TurnoverScreen():
             if event.type == pygame.QUIT:
                 pygame.quit()
                 quit
-                print("PENIS")
 
 #function to display game menu
 def gameMenu():
+    resetGame()
     intro = True
 
     font = pygame.font.SysFont('Limonata', 50)
@@ -295,16 +384,20 @@ def resetGame():
     global DownNum
     global ToGo 
     global BallOn
+    global timeoutsLeft
     global TimeLeft
     global yardsGained
+    global SideOfField
+
     DownNum = 1
     ToGo = 10
     BallOn = 37
+    timeoutsLeft = 2
     TimeLeft = 90
     yardsGained = 0
+    SideOfField = "CIN"
 
 def gameLoop():
-    resetGame()
 #game loop
     text = "It's December 5, 2009 and your beloved University of Cincinnati Bearcats are taking on the University of Pittsburgh Panthers.\n\nThe winner clinches the conference championship.\n\nThe Bearcats have a shot at playing inthe national championship with a win.\n\nHowever, the game starts out rough and the Bearcats are down 31-17 at haltime.\n\nAfter making some halftime adjustments, you come out strong in the second half and manage to tie the game up 38-38 at halftime.\n\nUnfortunately, Pittsburgh scores a touchdown late and manages to take the lead.\n\nBUT THEY MISS THE TWO POINT CONVERSION!\n...................................................................................................................................................\nThere's 1:30 left in the game and you have the ball on your own 39 yard line with 2 timeouts left.\n\nCan you drive down the field and score the game winning touchdown and give the Bearcats a chance to play in the national championship game?"
     instructionFont = pygame.font.SysFont('Times New Roman', 18)
@@ -316,7 +409,7 @@ def gameLoop():
         #keep the game running at the right speed
         screen.fill(BLACK)
         blit_text(screen, text, (20,100), instructionFont)
-        buttons("GOT IT! LET'S GO!",385,570,350,50, RED, WHITE, RED, screen1)
+        buttons("GOT IT! LET'S GO!",385,570,350,50, RED, WHITE, RED, playcallScreen)
         pygame.display.update()
         clock.tick(framesPerSecond)
         
@@ -329,4 +422,3 @@ def gameLoop():
     quit
 
 gameMenu()
-#TurnoverScreen()
