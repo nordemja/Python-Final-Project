@@ -5,11 +5,31 @@ import random
 pygame.init()
 
                 #----------PICTURES FOR GAME---------------#
-menuPic = pygame.image.load(r"C:\\Users\\justi\Documents\\Python Programming\\Final Project\\Python-Final-Project\\GamePictures\\Binns.jpg")
-bearcatLogo = pygame.image.load(r"C:\\Users\\justi\Documents\\Python Programming\\Final Project\\Python-Final-Project\\GamePictures\\BearcatLogo.png")
+
+menuPicPath = r"C:\\Users\\justi\Documents\\Python Programming\\Final Project\\Python-Final-Project\\GamePictures\\Binns.jpg"
+bearcatLogoPath = r"C:\\Users\\justi\Documents\\Python Programming\\Final Project\\Python-Final-Project\\GamePictures\\BearcatLogo.png"
+peadPath = r"C:\\Users\\justi\Documents\\Python Programming\\Final Project\\Python-Final-Project\\GamePictures\\Pead.jpg"
+pikePath =r"C:\\Users\\justi\Documents\\Python Programming\\Final Project\\Python-Final-Project\\GamePictures\\Pike.jpg"
+gameWinPath = r"C:\\Users\\justi\Documents\\Python Programming\\Final Project\\Python-Final-Project\\GamePictures\\GameWin.jpg"
+playCall1Path = r"C:\\Users\\justi\Documents\\Python Programming\\Final Project\\Python-Final-Project\\GamePictures\\kelly1.jpg"
+playCall2Path = r"C:\\Users\\justi\Documents\\Python Programming\\Final Project\\Python-Final-Project\\GamePictures\\kelly2.jpg"
+PikeToBinnsPath = r"C:\\Users\\justi\Documents\\Python Programming\\Final Project\\Python-Final-Project\\GamePictures\\PikeToBinns.jpg"
+
+
+menuPic = pygame.image.load(menuPicPath)
+bearcatLogo = pygame.image.load(bearcatLogoPath)
+peadPic = pygame.image.load(peadPath)
+pikePic = pygame.image.load(pikePath)
+gameWinPic = pygame.image.load(gameWinPath)
+playCall1Pic = pygame.image.load(playCall1Path)
+playCall2Pic = pygame.image.load(playCall2Path)
+PikeToBinsPic = pygame.image.load(PikeToBinnsPath)
 
 
                 #----------SOUND FOR GAME---------------#
+gameWinningAudioPath = r"C:\\Users\\justi\\Documents\\Python Programming\\Final Project\\Python-Final-Project\\GameWinningAudio.mp3"
+fightSongAudioPath = r"C:\\Users\\justi\\Documents\\Python Programming\\Final Project\\Python-Final-Project\\FightSong.mp3"
+
 
 #define colors
 WHITE = (255,255,255)
@@ -97,22 +117,24 @@ def runOption():
 
     x = True
     outcome1 = "Not sure why you're running right now but you gained 4 yards."
-    outcome2 = "You got lucky and gained 10 yards!"
-    outcome3 = "You fool! Pass the stinking ball! Don't Benglas this game away!"
+    outcome2 = "You got lucky and gained 7 yards!"
+    outcome3 = "You fool! Pass the stinking ball! You don't play for the Bengals!"
     outcome4 = "You got back to the line of scrimmage. No gain"
+    outcome5 = "You got tripped up and only gained 3 yards. Maybe try passing the ball"
+    outcome6 = "Defense wasn't expecting run and you gained 10 yards"
+    outcome7 = "You got tackled in the backfield. You lost 3 yards"
     
-    possibleOutcomes = [outcome1, outcome2, outcome3, outcome4]
+    possibleOutcomes = [outcome1, outcome2, outcome3, outcome4, outcome5, outcome6, outcome7]
     result = Results(possibleOutcomes)
 
-    if (TimeLeft <= 30 or yardsGained >= 33):
-        PikeToBinns()
+    if (TimeLeft <= 30 or yardsGained >= 43):
+        PikeToBinnsIntro()
     else:
-
         if result == outcome1:
             DownNum += 1
             ToGo -= 4
             yardsGained += 4
-            TimeLeft -= 10
+            TimeLeft -= 7
 
             if BallOn+4 > 50 and SideOfField == "CIN":
                 yardsRemaining = (BallOn+4) - 50
@@ -130,11 +152,61 @@ def runOption():
             elif DownNum > 4 and ToGo > 0:
                 TurnoverScreen()
 
-        if result == outcome2:
+        elif result == outcome2:
+            DownNum += 1
+            ToGo -= 7
+            yardsGained += 7
+            TimeLeft -= 7
+
+            if BallOn+7 > 50 and SideOfField == "CIN":
+                yardsRemaining = (BallOn+7) - 50
+                BallOn = 100 - 50 - yardsRemaining
+                SideOfField = "PIT"
+            elif yardsGained > 13:
+                BallOn -= 7
+            else:
+                BallOn += 7
+
+
+            if (DownNum > 4 and ToGo <= 0) or ToGo <= 0:
+                DownNum = 1
+                ToGo = 10
+            elif DownNum > 4 and ToGo > 0:
+                TurnoverScreen()
+
+        elif result == outcome4:
+            DownNum += 1
+            TimeLeft -= 3
+            if DownNum > 4:
+                TurnoverScreen()
+
+        elif result == outcome5:
+            DownNum += 1
+            ToGo -= 3
+            yardsGained += 3
+            TimeLeft -= 7
+
+            if BallOn+3 > 50 and SideOfField == "CIN":
+                yardsRemaining = (BallOn+3) - 50
+                BallOn = 100 - 50 - yardsRemaining
+                SideOfField = "PIT"
+            elif yardsGained > 13:
+                BallOn -= 3
+            else:
+                BallOn += 3
+
+
+            if (DownNum > 4 and ToGo <= 0) or ToGo <= 0:
+                DownNum = 1
+                ToGo = 10
+            elif DownNum > 4 and ToGo > 0:
+                TurnoverScreen()
+
+        elif result == outcome6:
             DownNum += 1
             ToGo -= 10
             yardsGained += 10
-            TimeLeft -= 10
+            TimeLeft -= 7
 
             if BallOn+10 > 50 and SideOfField == "CIN":
                 yardsRemaining = (BallOn+10) - 50
@@ -145,6 +217,27 @@ def runOption():
             else:
                 BallOn += 10
 
+            if (DownNum > 4 and ToGo <= 0) or ToGo <= 0:
+                DownNum = 1
+                ToGo = 10
+            elif DownNum > 4 and ToGo > 0:
+                TurnoverScreen()
+
+        elif result == outcome7:
+            DownNum += 1
+            ToGo += 3
+            yardsGained -= 3
+            TimeLeft -= 7
+
+            if BallOn+3 > 50 and SideOfField == "PIT":
+                yardsRemaining = (BallOn+3) - 50
+                BallOn = 100 - 50 - yardsRemaining
+                SideOfField = "CIN"
+            elif yardsGained > 13:
+                BallOn += 3
+            else:
+                BallOn -= 3
+
 
             if (DownNum > 4 and ToGo <= 0) or ToGo <= 0:
                 DownNum = 1
@@ -152,30 +245,36 @@ def runOption():
             elif DownNum > 4 and ToGo > 0:
                 TurnoverScreen()
 
-        if result == outcome4:
-            DownNum += 1
-            TimeLeft -= 5
-            if DownNum > 4:
-                TurnoverScreen()
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    quit
+
 
         while x:
-            screen.fill(BLACK)
+            screen.fill(RED)
+            screen.blit(peadPic, (325,180))
             if result == outcome1:
-                screen.fill(RED)
-                displayText(outcome1,'Limonata', BLACK, 35,WIDTH, HEIGHT)
-                buttons("NEXT PLAY", 415,470,350,50, BLACK,WHITE,BLACK, playcallScreen)
-            if result == outcome2:
-                screen.fill(RED)
-                displayText(outcome2,'Limonata', BLACK, 35, WIDTH, HEIGHT)
-                buttons("NEXT PLAY", 415,470,350,50, BLACK,WHITE,BLACK, playcallScreen)
-            if result == outcome3:
-                screen.fill(RED)
-                displayText(outcome3,'Limonata', BLACK, 35, 1050, 150)
-                buttons("PASS THE BALL!", 350,100,350,50, BLACK,WHITE,BLACK, passOption)
-            if result == outcome4:
-                screen.fill(RED)
-                displayText(outcome4,'Limonata', BLACK, 35, WIDTH, HEIGHT)
-                buttons("NEXT PLAY", 415,470,350,50, BLACK,WHITE,BLACK, playcallScreen)
+                displayText(outcome1,'Limonata', BLACK, 35,WIDTH, HEIGHT/4)
+                buttons("NEXT PLAY", 415,550,350,50, BLACK,WHITE,BLACK, playcallScreen)
+            elif result == outcome2:
+                displayText(outcome2,'Limonata', BLACK, 35, WIDTH, HEIGHT/4)
+                buttons("NEXT PLAY", 415,550,350,50, BLACK,WHITE,BLACK, playcallScreen)
+            elif result == outcome3:
+                displayText(outcome3,'Limonata', BLACK, 35, WIDTH, HEIGHT/4)
+                buttons("PASS THE BALL!", 415,115,350,50, BLACK,WHITE,BLACK, passOption)
+            elif result == outcome4:
+                displayText(outcome4,'Limonata', BLACK, 35, WIDTH, HEIGHT/4)
+                buttons("NEXT PLAY", 415,550,350,50, BLACK,WHITE,BLACK, playcallScreen)
+            elif result == outcome5:
+                displayText(outcome5,'Limonata', BLACK, 35, WIDTH, HEIGHT/4)
+                buttons("NEXT PLAY", 415,550,350,50, BLACK,WHITE,BLACK, playcallScreen)
+            elif result == outcome6:
+                displayText(outcome6,'Limonata', BLACK, 35, WIDTH, HEIGHT/4)
+                buttons("NEXT PLAY", 415,550,350,50, BLACK,WHITE,BLACK, playcallScreen)
+            else:
+                displayText(outcome7,'Limonata', BLACK, 35, WIDTH, HEIGHT/4)
+                buttons("NEXT PLAY", 415,550,350,50, BLACK,WHITE,BLACK, playcallScreen)
             pygame.display.update()
             clock.tick(framesPerSecond)
 
@@ -184,6 +283,7 @@ def runOption():
                     pygame.quit()
                     quit
 
+        
 #if the user selects pass
 def passOption():
 
@@ -195,44 +295,25 @@ def passOption():
     global SideOfField
 
     x = True
-    outcome1 = "You found an open receiver for a gain of 10 yards!"
-    outcome2 = "You found an open receiver for a gain of 5 yards!"
-    outcome3 = "You got sacked! Loss of 5 yards!"
-    outcome4 = "You threw a deep bomb and connected for a gain of 20 yards"
-    possibleOutcomes = [outcome1, outcome2, outcome3, outcome4]
+    outcome1 = "You found an open receiver for a gain of 5 yards!"
+    outcome2 = "You found an open receiver for a gain of 3 yards!"
+    outcome3 = "You got sacked! Loss of 3 yards!"
+    outcome4 = "You threw a deep bomb and connected for a gain of 10 yards"
+    outcome5 = "You coudln't find any open receivers but scrambled for 4 yards"
+    outcome6 = "Incomplete Pass. No gain"
+    outcome7 = "You threw a passs right on target for a gain of 7 yards"
+    possibleOutcomes = [outcome1, outcome2, outcome3, outcome4, outcome5, outcome6, outcome7]
     result = Results(possibleOutcomes)
 
     if (TimeLeft <= 30 or yardsGained >= 33):
-        PikeToBinns()
+        PikeToBinnsIntro()
     else:
 
         if result == outcome1:
             DownNum += 1
-            ToGo -= 10
-            yardsGained += 10
-            TimeLeft -= 10
-
-            if BallOn+10 > 50 and SideOfField == "CIN":
-                yardsRemaining = (BallOn+10) - 50
-                BallOn = 100 - 50 - yardsRemaining
-                SideOfField = "PIT"
-            elif yardsGained > 13:
-                BallOn -= 10
-            else:
-                BallOn += 10
-
-
-            if (DownNum > 4 and ToGo <= 0) or ToGo <= 0:
-                DownNum = 1
-                ToGo = 10
-            elif DownNum > 4 and ToGo > 0:
-                TurnoverScreen()
-
-        if result == outcome2:
-            DownNum += 1
             ToGo -= 5
             yardsGained += 5
-            TimeLeft -= 5
+            TimeLeft -= 7
 
             if BallOn+5 > 50 and SideOfField == "CIN":
                 yardsRemaining = (BallOn+5) - 50
@@ -243,40 +324,117 @@ def passOption():
             else:
                 BallOn += 5
 
+
             if (DownNum > 4 and ToGo <= 0) or ToGo <= 0:
                 DownNum = 1
                 ToGo = 10
             elif DownNum > 4 and ToGo > 0:
                 TurnoverScreen()
 
-        if result == outcome3:
+        elif result == outcome2:
             DownNum += 1
-            ToGo += 5
-            yardsGained -= 5
-            TimeLeft -= 10
+            ToGo -= 3
+            yardsGained += 3
+            TimeLeft -= 7
 
-            if SideOfField == "PIT":
-                BallOn += 5
-            elif SideOfField == "CIN":
-                BallOn -= 5 
+            if BallOn+3 > 50 and SideOfField == "CIN":
+                yardsRemaining = (BallOn+3) - 50
+                BallOn = 100 - 50 - yardsRemaining
+                SideOfField = "PIT"
+            elif yardsGained > 13:
+                BallOn -= 3
+            else:
+                BallOn += 3
+
+            if (DownNum > 4 and ToGo <= 0) or ToGo <= 0:
+                DownNum = 1
+                ToGo = 10
+            elif DownNum > 4 and ToGo > 0:
+                TurnoverScreen()
+
+        elif result == outcome3:
+            DownNum += 1
+            ToGo += 3
+            yardsGained -= 3
+            TimeLeft -= 7
+
+            if BallOn+3 > 50 and SideOfField == "PIT":
+                yardsRemaining = (BallOn+3) - 50
+                BallOn = 100 - 50 - yardsRemaining
+                SideOfField = "CIN"
+            elif yardsGained > 13:
+                BallOn += 3
+            else:
+                BallOn -= 3
 
             if DownNum > 4:
                 TurnoverScreen()
 
-        if result == outcome4:
+        elif result == outcome4:
             DownNum += 1
-            ToGo -= 20
-            yardsGained += 20
-            TimeLeft -= 15
+            ToGo -= 10
+            yardsGained += 10
+            TimeLeft -= 12
 
-            if BallOn+20 > 50 and SideOfField == "CIN":
-                yardsRemaining = (BallOn+20) - 50
+            if BallOn+10 > 50 and SideOfField == "CIN":
+                yardsRemaining = (BallOn+10) - 50
                 BallOn = 100 - 50 - yardsRemaining
                 SideOfField = "PIT"
             elif yardsGained > 13:
-                BallOn -= 20
+                BallOn -= 10
             else:
-                BallOn += 20
+                BallOn += 10
+
+            if (DownNum > 4 and ToGo <= 0) or ToGo <= 0:
+                DownNum = 1
+                ToGo = 10
+            elif DownNum > 4 and ToGo > 0:
+                TurnoverScreen()
+        
+        elif result == outcome5:
+            DownNum += 1
+            ToGo -= 4
+            yardsGained += 4
+            TimeLeft -= 7
+
+            if BallOn+4 > 50 and SideOfField == "CIN":
+                yardsRemaining = (BallOn+5) - 50
+                BallOn = 100 - 50 - yardsRemaining
+                SideOfField = "PIT"
+            elif yardsGained > 13:
+                BallOn -= 4
+            else:
+                BallOn += 4
+
+
+            if (DownNum > 4 and ToGo <= 0) or ToGo <= 0:
+                DownNum = 1
+                ToGo = 10
+            elif DownNum > 4 and ToGo > 0:
+                TurnoverScreen()
+
+        elif result == outcome6:
+            DownNum += 1
+            TimeLeft -= 7
+
+            if DownNum > 4:
+                TurnoverScreen()
+
+        else:
+            DownNum += 1
+            ToGo -= 7
+            yardsGained += 7
+            TimeLeft -= 7
+
+            if BallOn+7 > 50 and SideOfField == "CIN":
+                yardsRemaining = (BallOn+7) - 50
+                BallOn = 100 - 50 - yardsRemaining
+                SideOfField = "PIT"
+            elif yardsGained > 13:
+                BallOn -= 7
+            else:
+                BallOn += 7
+
 
             if (DownNum > 4 and ToGo <= 0) or ToGo <= 0:
                 DownNum = 1
@@ -285,23 +443,29 @@ def passOption():
                 TurnoverScreen()
 
         while x:
-            screen.fill(BLACK)
+            screen.fill(RED)
+            screen.blit(pikePic, (325,140))
             if result == outcome1:
-                screen.fill(RED)
-                displayText(outcome1,'Limonata', BLACK, 35, WIDTH, HEIGHT)
-                buttons("NEXT PLAY", 415,470,350,50, BLACK,WHITE,BLACK, playcallScreen)
-            if result == outcome2:
-                screen.fill(RED)
-                displayText(outcome2,'Limonata', BLACK, 35, WIDTH, HEIGHT)
-                buttons("NEXT PLAY", 415,470,350,50, BLACK,WHITE,BLACK, playcallScreen)
-            if result == outcome3:
-                screen.fill(RED)
-                displayText(outcome3,'Limonata', BLACK, 35, WIDTH, HEIGHT)
-                buttons("NEXT PLAY", 415,470,350,50, BLACK,WHITE,BLACK, playcallScreen)
-            if result == outcome4:
-                screen.fill(RED)
-                displayText(outcome4,'Limonata', BLACK, 35, WIDTH, HEIGHT)
-                buttons("NEXT PLAY", 415,470,350,50, BLACK,WHITE,BLACK, playcallScreen)
+                displayText(outcome1,'Limonata', BLACK, 35, WIDTH, HEIGHT/4)
+                buttons("NEXT PLAY", 415,550,350,50, BLACK,WHITE,BLACK, playcallScreen)
+            elif result == outcome2:
+                displayText(outcome2,'Limonata', BLACK, 35, WIDTH, HEIGHT/4)
+                buttons("NEXT PLAY", 415,550,350,50, BLACK,WHITE,BLACK, playcallScreen)
+            elif result == outcome3:
+                displayText(outcome3,'Limonata', BLACK, 35, WIDTH, HEIGHT/4)
+                buttons("NEXT PLAY", 415, 550,350,50, BLACK,WHITE,BLACK, playcallScreen)
+            elif result == outcome4:
+                displayText(outcome4,'Limonata', BLACK, 35, WIDTH, HEIGHT/4)
+                buttons("NEXT PLAY", 415,550,350,50, BLACK,WHITE,BLACK, playcallScreen)
+            elif result == outcome5:
+                displayText(outcome5,'Limonata', BLACK, 35, WIDTH, HEIGHT/4)
+                buttons("NEXT PLAY", 415,550,350,50, BLACK,WHITE,BLACK, playcallScreen)
+            elif result == outcome6:
+                displayText(outcome6,'Limonata', BLACK, 35, WIDTH, HEIGHT/4)
+                buttons("NEXT PLAY", 415,550,350,50, BLACK,WHITE,BLACK, playcallScreen)
+            else:
+                displayText(outcome7,'Limonata', BLACK, 35, WIDTH, HEIGHT/4)
+                buttons("NEXT PLAY", 415,550,350,50, BLACK,WHITE,BLACK, playcallScreen)
             pygame.display.update()
             clock.tick(framesPerSecond)
             
@@ -321,6 +485,7 @@ def getSuffix(currentDown):
         return "th"
 
 def playcallScreen():
+    pygame.mixer.music.stop()
     x = True
     if yardsGained < 13:
         message = "Down: " + str(DownNum) + getSuffix(DownNum) + " and " + str(ToGo) + "               " + "Ball on: " + str(SideOfField) + " " + str(BallOn) + "               " + "Time left: " + str(TimeLeft) + " seconds"
@@ -328,9 +493,14 @@ def playcallScreen():
         message = "Down: " + str(DownNum) + getSuffix(DownNum) + " and " + str(ToGo) + "               " + "Ball on: " + str(SideOfField) + "               " + "Time left: " + str(TimeLeft) + " seconds"
     else:
         message = "Down: " + str(DownNum) + getSuffix(DownNum) + " and " + str(ToGo) + "               " + "Ball on: " + str(SideOfField) + " " +  str(BallOn) + "           " + "Time left: " + str(TimeLeft) + " seconds"
+    playcallImage = Results([playCall1Pic, playCall2Pic])
     while x:
+        screen.fill(RED)
+        if playcallImage == playCall2Pic:
+            screen.blit(playcallImage, (285,280))
+        else:
+            screen.blit(playcallImage, (350,280))
         if timeoutsLeft > 0:
-            screen.fill(RED)
             displayText(message,'Limonata',BLACK,35,1155,225)
             buttons("PASS", 250,175,150,75,BLACK,WHITE,BLACK, passOption)
             buttons("RUN", 450,175,150,75,BLACK,WHITE,BLACK, runOption)
@@ -338,7 +508,6 @@ def playcallScreen():
             pygame.display.update()
             clock.tick(framesPerSecond)
         else:
-            screen.fill(RED)
             displayText(message,'Limonata',BLACK,35,1155,225)
             buttons("PASS", 400,175,150,75,BLACK,WHITE,BLACK, passOption)
             buttons("RUN", 600,175,150,75,BLACK,WHITE,BLACK, runOption)
@@ -375,9 +544,10 @@ def TurnoverScreen():
     message = "YOU TURNED THE BALL OVER ON DOWNS! YOU LOST THE GAME!    "
     while x:
         screen.fill(RED)
+        screen.blit(playCall1Pic, (420,180))
         displayText(message,'Limonata',BLACK,35,1155,225)
-        buttons("PLAY AGAIN", 275, 500, 250, 75, BLACK, WHITE, BLACK, gameMenu)
-        buttons("QUIT", 675, 500, 150, 75, BLACK, WHITE, BLACK, quit)
+        buttons("PLAY AGAIN", 65, 300, 250, 75, BLACK, WHITE, BLACK, gameMenu)
+        buttons("QUIT", 845, 300, 250, 75, BLACK, WHITE, BLACK, quit)
         pygame.display.update()
         clock.tick(framesPerSecond)
 
@@ -387,12 +557,36 @@ def TurnoverScreen():
                 pygame.quit()
                 quit
 
-def PikeToBinns():
+def PikeToBinnsIntro():
+    message = "The time has come. You see Armon Binns streaking down the right side of the field.\n\nLet the ball fly and listen to Dan Hoard make the call to see if you won the game!"
+    PikeToBinnsFont = pygame.font.SysFont('Times New Roman', 23)
+    PikeToBinnsFont.set_bold(True)
     x = True
     while x:
+        screen.fill(BLACK)
+        screen.blit(PikeToBinsPic, (255,190))
+        blit_text(screen, message, (80,70), PikeToBinnsFont)
+        buttons("LET IT RIP!",385,570,350,50, RED, WHITE, RED, PikeToBinns)
+        pygame.display.update()
+        clock.tick(framesPerSecond)
 
-        screen.fill(WHITE)
-        buttons("QUIT", 350,100,350,50, BLACK,WHITE,BLACK, quit)
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                quit
+
+
+def PikeToBinns():
+    x = True
+    gameWinningSound = pygame.mixer.music.load(gameWinningAudioPath)
+    pygame.mixer.music.play(0)
+
+    while x:
+        screen.fill(BLACK)
+        displayText("YOU WON!", "Limonata", RED, 55, 1150,200)
+        screen.blit(gameWinPic, (322,190))
+        buttons("QUIT", 50,300,250,75, RED,WHITE,RED, quit)
+        buttons("PLAY AGAIN", 850,300,250,75, RED,WHITE,RED, gameMenu)
         pygame.display.update()
         clock.tick(framesPerSecond)
 
@@ -404,6 +598,8 @@ def PikeToBinns():
 #function to display game menu
 def gameMenu():
     resetGame()
+    fightSongSound = pygame.mixer.music.load(fightSongAudioPath)
+    pygame.mixer.music.play(0)
     intro = True
 
     font = pygame.font.SysFont('Limonata', 50)
